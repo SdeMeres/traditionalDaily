@@ -1,14 +1,15 @@
 <?php
-namespace App\Controllers
+namespace App\Controllers;
+
+use App\Models\Article;
 
 class PublicController {
     public function index(){
-        $name = 'Säde';
-        $list = ['kohuke','vitamiinivesi'];
+        $articles = Article::all();
         include 'viuud/tunnist.php';
     
     }
-    public function about(){
+    public function abouts(){
         include 'viuud/about.php';
     }
 }
