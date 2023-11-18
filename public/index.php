@@ -1,18 +1,25 @@
 <?php
+
 spl_autoload_register(function ($class){
-   var_dump($class);
+   $class = substr($class, 4);
+   require_once __DIR__ . '/../src/$class.php';
 });
-require __DIR__ . '/../src/Router.php';
-$router = new Router();
-// switch($_SERVER['REQUEST_URI']){
-//     case '/':
-//         $name = 'Säde';
-//         $list = ['kohuke','vitamiinivesi'];
-//         include 'viuud/tunnist.php';
-//         break;
-//     case '/about':
-//         include 'viuud/about.php';
-//         break;
-//     default:
-//         http_response_code(404);
-// }
+
+$routes = require_once __DIR__ . '/../routes.php';
+
+
+$router =  new App\Router($_SERVER['REQUEST_URI']);
+$match = $router->match();
+if($match){
+    if(is_callable($match['action'])){
+    call_user_func($match['action']);
+} else if(is_array($match['action']) && count($match['action']) === 2){
+    $class = $match['action'][0];
+    $controller = new $class();
+    $method = $match['action'][1];
+    $controller->$method();
+}
+} else {
+    http_response_code(404);
+    include 'views/404.php';
+}
