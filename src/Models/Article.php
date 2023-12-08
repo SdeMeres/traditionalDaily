@@ -9,9 +9,4 @@ class Article extends Model {
     public $title;
     public $body;
 
-    // public static function all(
-    //     $db = new DB();
-    //     return $db->all(self::$table, self::class);
-    // )
-
 }

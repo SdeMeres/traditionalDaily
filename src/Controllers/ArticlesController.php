@@ -3,20 +3,53 @@ namespace App\Controllers;
 
 use App\DB;
 use App\Models\Article;
-use App\Models\User;
 
 class ArticlesController {
+
+    public function __construct(){
+        if(!auth()){
+            header('Location: /login');
+        }
+    }
+
     public function index(){
-    
         $articles = Article::all();
-        include 'viuud/articles/index.php';
-   
+        include 'views/articles/index.php';
     }
+
     public function create(){
-        include 'viuud/articles/create.php';
+        include 'views/articles/create.php';
     }
+
     public function store(){
-        var_dump($_GET);
-        var_dump($_POST);
+        $article = new Article();
+        $article->title = $_POST['title'];
+        $article->body = $_POST['body'];
+        $article->save();
+        header('Location: /admin/articles');
+    }
+
+    public function show(){
+       $article = Article::find($_GET['id']);
+       include 'views/articles/show.php';
+    }
+
+    public function edit(){
+        $article = Article::find($_GET['id']);
+        include 'views/articles/edit.php';
+    }
+
+    public function update(){
+        $article = Article::find($_GET['id']);
+        $article->title = $_POST['title'];
+        $article->body = $_POST['body'];
+        $article->save();
+        header('Location: /admin/articles');
+    }
+
+    public function destroy(){
+        $article = Article::find($_GET['id']);
+        $article->delete();
+        header('Location: /admin/articles');
     }
 }
